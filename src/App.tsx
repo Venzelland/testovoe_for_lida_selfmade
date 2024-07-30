@@ -16,7 +16,20 @@ function App() {
     const [isEditing, setIsEditing] = useState<{ [key: number]: boolean }>({})
 
     const toggleEditing = (rowIndex: number) => {
-        setIsEditing((prev) => ({ ...prev, [rowIndex]: !prev[rowIndex] }))
+        setIsEditing((prev) => ({...prev, [rowIndex]: !prev[rowIndex]}))
+    }
+
+    const handleCellValue = (rowIndex: number, colIndex: number) => {
+        if (!isEditing[rowIndex]) return;
+        const newRows = rows.map((row, index) =>
+            index === rowIndex
+                ? {
+                    ...row,
+                    cells: row.cells.map((cell, cIndex) => (cIndex === colIndex ? !cell : cell)),
+                }
+                : row
+        )
+        setRows(newRows)
     }
 
     return (
@@ -37,20 +50,29 @@ function App() {
                     <tr key={row.id}>
                         <td>Заказ{row.id + 1}</td>
                         {row.cells.map((cell, index) => (
-                                <td key={index}>{cell.toString()}</td>
-                            ))}
+                            <td
+                                key={index}
+                                onClick={() => handleCellValue(row.id, index)}
+                                style={{
+                                    backgroundColor:  cell ? 'green' : 'red',
+                                    cursor: isEditing[row.id] ? 'pointer' : 'default',
+                                    }}
+                            >
+                                {cell.toString()}
+                            </td>
+                        ))}
                         <td>
                             <button onClick={() => toggleEditing(row.id)}>
-                                {isEditing[row.id] ? 'Сохранить': 'Редактировать'}
+                                {isEditing[row.id] ? 'Сохранить' : 'Редактировать'}
                             </button>
-                            <button>удалить</button>
+                            <button>Удалить</button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
-                    </table>
-                    </div>
-                    )
-                }
+            </table>
+        </div>
+    )
+}
 
 export default App
