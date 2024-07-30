@@ -14,6 +14,7 @@ const initialRows: TableRowType[] = [
 function App() {
     const [rows, setRows] = useState<TableRowType[]>(initialRows)
     const [isEditing, setIsEditing] = useState<{ [key: number]: boolean }>({})
+    const [columns, setColumns] = useState<number[]>([1, 2]);
 
     const toggleEditing = (rowIndex: number) => {
         setIsEditing((prev) => ({...prev, [rowIndex]: !prev[rowIndex]}))
@@ -32,17 +33,34 @@ function App() {
         setRows(newRows)
     }
 
+    const addRow = () => {
+        const newRows: TableRowType = {
+            id: rows.length,
+            cells: columns.map(() => Math.random() < 0, 5)
+        }
+        setRows((prevRows) => [...prevRows, newRows])
+    };
+
+    const deleteRow = (rowIndex: number) => {
+        setRows((prevRows) => prevRows.filter((row) => row.id !== rowIndex))
+        setIsEditing((prev) => {
+                const newEditing = {...prev}
+                delete newEditing[rowIndex]
+                return newEditing
+            }
+        )
+    };
     return (
         <div>
             <h1>Таблица</h1>
+            <button onClick={addRow}>Добавить ряд</button>
             <table>
-                <colgroup>
-                </colgroup>
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Обработка1</th>
-                    <th>Обработка2</th>
+                    {columns.map((col) => (
+                        <th key={col}>Обработка {col}</th>
+                    ))}
                 </tr>
                 </thead>
                 <tbody>
@@ -54,9 +72,9 @@ function App() {
                                 key={index}
                                 onClick={() => handleCellValue(row.id, index)}
                                 style={{
-                                    backgroundColor:  cell ? 'green' : 'red',
+                                    backgroundColor: cell ? 'green' : 'red',
                                     cursor: isEditing[row.id] ? 'pointer' : 'default',
-                                    }}
+                                }}
                             >
                                 {cell.toString()}
                             </td>
@@ -65,7 +83,7 @@ function App() {
                             <button onClick={() => toggleEditing(row.id)}>
                                 {isEditing[row.id] ? 'Сохранить' : 'Редактировать'}
                             </button>
-                            <button>Удалить</button>
+                            <button onClick={() => deleteRow(row.id)}>Удалить</button>
                         </td>
                     </tr>
                 ))}
