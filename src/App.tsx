@@ -13,6 +13,11 @@ const initialRows: TableRowType[] = [
 
 function App() {
     const [rows, setRows] = useState<TableRowType[]>(initialRows)
+    const [isEditing, setIsEditing] = useState<{ [key: number]: boolean }>({})
+
+    const toggleEditing = (rowIndex: number) => {
+        setIsEditing((prev) => ({ ...prev, [rowIndex]: !prev[rowIndex] }))
+    }
 
     return (
         <div>
@@ -35,7 +40,9 @@ function App() {
                                 <td key={index}>{cell.toString()}</td>
                             ))}
                         <td>
-                            <button>редактировать</button>
+                            <button onClick={() => toggleEditing(row.id)}>
+                                {isEditing[row.id] ? 'Сохранить': 'Редактировать'}
+                            </button>
                             <button>удалить</button>
                         </td>
                     </tr>
