@@ -11,10 +11,13 @@ const initialRows: TableRowType[] = [
     {id: 1, cells: [true, false]}
 ]
 
+const initialColumns = [1, 2]
+
 function App() {
     const [rows, setRows] = useState<TableRowType[]>(initialRows)
     const [isEditing, setIsEditing] = useState<{ [key: number]: boolean }>({})
-    const [columns, setColumns] = useState<number[]>([1, 2]);
+    const [columns, setColumns] = useState<number[]>(initialColumns);
+    const [maxId, setMaxId] = useState<number>(initialRows.length)
 
     const toggleEditing = (rowIndex: number) => {
         setIsEditing((prev) => ({...prev, [rowIndex]: !prev[rowIndex]}))
@@ -35,14 +38,16 @@ function App() {
 
     const addRow = () => {
         const newRows: TableRowType = {
-            id: rows.length,
-            cells: columns.map(() => Math.random() < 0, 5)
+            id: maxId,
+            cells: columns.map(() => Math.random() < 0.5)
         }
         setRows((prevRows) => [...prevRows, newRows])
+        setMaxId((prevMaxId) => prevMaxId + 1)
     };
 
     const deleteRow = (rowIndex: number) => {
-        setRows((prevRows) => prevRows.filter((row) => row.id !== rowIndex))
+        const newRows = rows.filter((row) => row.id !== rowIndex).map((row, index) => ({ ...row, id: index }));
+        setRows(newRows)
         setIsEditing((prev) => {
                 const newEditing = {...prev}
                 delete newEditing[rowIndex]
