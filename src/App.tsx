@@ -50,8 +50,8 @@ function App() {
 
     const handleCellValue = (rowIndex: number, colIndex: number) => {
         if (!isEditing[rowIndex]) return;
-        const newRows = rows.map((row, index) =>
-            index === rowIndex
+        const newRows = rows.map((row) =>
+            row.id === rowIndex
                 ? {
                     ...row,
                     cells: row.cells.map((cell, cIndex) => (cIndex === colIndex ? !cell : cell)),
@@ -71,8 +71,7 @@ function App() {
     };
 
     const deleteRow = (rowIndex: number) => {
-        const newRows = rows.filter((row) => row.id !== rowIndex).map((row, index) => ({ ...row, id: index }));
-        setRows(newRows)
+        setRows((prevRows) => prevRows.filter((row) => row.id !== rowIndex));
         setIsEditing((prev) => {
                 const newEditing = {...prev}
                 delete newEditing[rowIndex]
