@@ -1,10 +1,27 @@
 import './App.css'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 type TableRowType = {
     id: number
     cells: boolean[]
 }
+
+const getRandomInt = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const generateInitialColumns = () => {
+    const columnsCount = getRandomInt(2, 7);
+    return Array.from({ length: columnsCount }, (_, i) => i + 1);
+};
+
+const generateInitialRows = (columns: number[]) => {
+    const rowsCount = getRandomInt(2, 7);
+    return Array.from({ length: rowsCount }, (_, i) => ({
+        id: i,
+        cells: columns.map(() => Math.random() < 0.5)
+    }));
+};
 
 const initialRows: TableRowType[] = [
     {id: 0, cells: [false, true]},
@@ -18,6 +35,14 @@ function App() {
     const [isEditing, setIsEditing] = useState<{ [key: number]: boolean }>({})
     const [columns, setColumns] = useState<number[]>(initialColumns);
     const [maxId, setMaxId] = useState<number>(initialRows.length)
+
+    useEffect(() => {
+        const initialColumns = generateInitialColumns();
+        const initialRows = generateInitialRows(initialColumns);
+        setColumns(initialColumns);
+        setRows(initialRows);
+        setMaxId(initialRows.length);
+    }, []);
 
     const toggleEditing = (rowIndex: number) => {
         setIsEditing((prev) => ({...prev, [rowIndex]: !prev[rowIndex]}))
@@ -37,11 +62,11 @@ function App() {
     }
 
     const addRow = () => {
-        const newRows: TableRowType = {
+        const newRow: TableRowType = {
             id: maxId,
             cells: columns.map(() => Math.random() < 0.5)
         }
-        setRows((prevRows) => [...prevRows, newRows])
+        setRows((prevRows) => [...prevRows, newRow])
         setMaxId((prevMaxId) => prevMaxId + 1)
     };
 
