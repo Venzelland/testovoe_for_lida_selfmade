@@ -11,12 +11,12 @@ const getRandomInt = (min: number, max: number) => {
 }
 
 const generateInitialColumns = () => {
-    const columnsCount = getRandomInt(2, 7);
+    const columnsCount = getRandomInt(98, 99);
     return Array.from({ length: columnsCount }, (_, i) => i + 1);
 };
 
 const generateInitialRows = (columns: number[]) => {
-    const rowsCount = getRandomInt(2, 7);
+    const rowsCount = getRandomInt(98, 99);
     return Array.from({ length: rowsCount }, (_, i) => ({
         id: i,
         cells: columns.map(() => Math.random() < 0.5)
@@ -83,41 +83,42 @@ function App() {
         <div>
             <h1>Таблица</h1>
             <button onClick={addRow}>Добавить ряд</button>
-            <table>
-                <thead>
-                <tr>
-                    <th>#</th>
-                    {columns.map((col) => (
-                        <th key={col}>Обработка {col}</th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {rows.map((row: TableRowType) => (
-                    <tr key={row.id}>
-                        <td>Заказ{row.id + 1}</td>
-                        {row.cells.map((cell, index) => (
-                            <td
-                                key={index}
-                                onClick={() => handleCellValue(row.id, index)}
-                                style={{
-                                    backgroundColor: cell ? 'green' : 'red',
-                                    cursor: isEditing[row.id] ? 'pointer' : 'default',
-                                }}
-                            >
-                                {cell.toString()}
-                            </td>
+            <div className="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        {columns.map((col) => (
+                            <th className={'vertically'}  key={col}>Обработка{col}</th>
                         ))}
-                        <td>
-                            <button onClick={() => toggleEditing(row.id)}>
-                                {isEditing[row.id] ? 'Сохранить' : 'Редактировать'}
-                            </button>
-                            <button onClick={() => deleteRow(row.id)}>Удалить</button>
-                        </td>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {rows.map((row: TableRowType) => (
+                        <tr key={row.id}>
+                            <td>Заказ{row.id + 1}</td>
+                            {row.cells.map((cell, index) => (
+                                <td
+                                    key={index}
+                                    onClick={() => handleCellValue(row.id, index)}
+                                    style={{
+                                        backgroundColor: cell ? 'green' : 'red',
+                                        cursor: isEditing[row.id] ? 'pointer' : 'default',
+                                    }}
+                                >
+                                </td>
+                            ))}
+                            <td>
+                                <button onClick={() => toggleEditing(row.id)}>
+                                    {isEditing[row.id] ? 'Сохранить' : 'Редактировать'}
+                                </button>
+                                <button onClick={() => deleteRow(row.id)}>Удалить</button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }
