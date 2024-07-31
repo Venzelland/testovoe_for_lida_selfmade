@@ -11,12 +11,12 @@ const getRandomInt = (min: number, max: number) => {
 }
 
 const generateInitialColumns = () => {
-    const columnsCount = getRandomInt(98, 99);
+    const columnsCount = getRandomInt(2, 99);
     return Array.from({ length: columnsCount }, (_, i) => i + 1);
 };
 
 const generateInitialRows = (columns: number[]) => {
-    const rowsCount = getRandomInt(98, 99);
+    const rowsCount = getRandomInt(2, 99);
     return Array.from({ length: rowsCount }, (_, i) => ({
         id: i,
         cells: columns.map(() => Math.random() < 0.5)
@@ -87,16 +87,16 @@ function App() {
                 <table>
                     <thead>
                     <tr>
-                        <th>#</th>
+                        <th className='sticky-col'>#</th>
                         {columns.map((col) => (
-                            <th className={'vertically'}  key={col}>Обработка{col}</th>
+                            <th className='sticky-header vertically' key={col}>Обработка{col}</th>
                         ))}
                     </tr>
                     </thead>
                     <tbody>
                     {rows.map((row: TableRowType) => (
                         <tr key={row.id}>
-                            <td>Заказ{row.id + 1}</td>
+                            <td className='sticky-col'>Заказ{row.id + 1}</td>
                             {row.cells.map((cell, index) => (
                                 <td
                                     key={index}
